@@ -9,28 +9,32 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var card = appState.loading
-        ? const Text('loading...')
-        : JokeCard(joke: appState.joke);
+
+    var widgets = <Widget>[];
+    if (appState.joke.isNotEmpty || appState.loading) {
+      var card = appState.loading
+          ? const Text('loading...')
+          : JokeCard(joke: appState.joke);
+      widgets.add(Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: card,
+      ));
+    }
+    widgets.add(ElevatedButton(
+        onPressed: () {
+          appState.getJoke();
+        },
+        child: const Text('Tell me a joke')));
+    widgets.add(const SizedBox(
+      height: 20,
+    ));
+
     return Scaffold(
       body: Center(
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: card,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    appState.getJoke();
-                  },
-                  child: const Text('Tell me a joke')),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
+            children: widgets,
           ),
         ),
       ),
